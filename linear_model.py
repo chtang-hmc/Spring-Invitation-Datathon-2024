@@ -129,5 +129,17 @@ def test_linear_model(X, y):
         multi_collinearity = check_multi_collinearity(X)
         if normal_residuals and homoscedasticity and not autocorrelation and multi_collinearity:
             print('The model passes all the assumptions.')
-            print(model.summary())
+        print(model.summary())
+        std_X = np.std(X, axis=0)
+        # Compute standardized coefficients
+        standardized_coeffs = model.params[1:] * (std_X / np.std(y))
+        coefficients_with_names = dict(zip(X.columns, standardized_coeffs))
+        plt.bar(coefficients_with_names.keys(), coefficients_with_names.values())
+        plt.xlabel('Variable')
+        plt.ylabel('Standardized Coefficient')
+        plt.title('Standardized Coefficients')
+        plt.xticks(rotation=45)
+        plt.grid(axis='y', linestyle='--', alpha=0.7)
+        plt.tight_layout()
+        plt.show()
     return model
